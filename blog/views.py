@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Post
 from .forms import CommentForm
@@ -14,11 +15,16 @@ def post_detail(request, pk):
     'post': post,
 })
 
+
+@login_required
 def comment_new(request, post_pk):
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
-            comment = form.save()
+            comment = form.save(commit=False)
+            comment.post = get_object_or_404(Post, pk=post_pk)
+            comment.user = request.user
+            comment.save()
             return redirect('blog:post_detail', post_pk)
     else:
         form = CommentForm()
