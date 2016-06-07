@@ -6,3 +6,7 @@ class Post(models.Model):
     photo = models.ImageField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+def _str_(self):
+    return self.title
+    
